@@ -1,10 +1,7 @@
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
-import 'package:dio/dio.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -43,7 +40,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         result = scanData;
       });
-      print(result?.code);
+      // print(result?.code);
       // sendQRToAPI(result?.code);
     });
   }
@@ -58,41 +55,35 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const Icon(Icons.calendar_month),
         title: const Text(
           "Attendance Scanner",
         ),
       ),
-      body: ListView(
-        children: [
-          Column(
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
-                  formatsAllowed: const [BarcodeFormat.qrcode],
-                ),
-              ),
-              // Expanded(
-              //   flex: 1,
-              //   child: Center(
-              //     child: (result != null)
-              //         ? Text('Data: ${result!.code}')
-              //         : Text('Scan a code'),
-              //   ),
-              // ),
-              Expanded(
-                flex: 1,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: const Text(
-                    "Scan",
-                  ),
-                ),
-              ),
-            ],
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 4,
+            child: QRView(
+              key: qrKey,
+              onQRViewCreated: _onQRViewCreated,
+              formatsAllowed: const [BarcodeFormat.qrcode],
+            ),
           ),
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: (result != null)
+                  ? Text('Data: ${result!.code}')
+                  : Text('Scan a QR code'),
+            ),
+          ),
+          // ElevatedButton(
+          //   onPressed: () {},
+          //   child: const Text(
+          //     "Scan",
+          //   ),
+          // ),
         ],
       ),
     );
