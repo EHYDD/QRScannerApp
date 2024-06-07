@@ -62,20 +62,40 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.only(top: 5.0, bottom: 15.0),
+            child: Text(
+              "Scan an Employee's QR Code to sign attendance.",
+              style: TextStyle(
+                fontSize: 16.0,
+              ),
+            ),
+          ),
           Expanded(
             flex: 4,
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-              formatsAllowed: const [BarcodeFormat.qrcode],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15.0,
+              ),
+              child: Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: QRView(
+                  key: qrKey,
+                  onQRViewCreated: _onQRViewCreated,
+                  formatsAllowed: const [BarcodeFormat.qrcode],
+                ),
+              ),
             ),
           ),
           Expanded(
             flex: 1,
             child: Center(
               child: (result != null)
-                  ? Text('Data: ${result!.code}')
-                  : Text('Scan a QR code'),
+                  ? Text('Employee ID: ${result!.code}')
+                  : const Text("Employee ID Will Show Down Here"),
             ),
           ),
           // ElevatedButton(
