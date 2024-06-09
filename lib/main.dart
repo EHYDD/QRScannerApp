@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qrscan/pages/homepage.dart';
+import 'package:qrscan/pages/loginPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +20,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
-        "/": (context) => const HomePage(),
+        "/": (context) => const LoginPage(),
       },
     );
   }
