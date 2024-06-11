@@ -11,11 +11,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var urlBase = "https://api.daveget.tech/api/";
+  var urlBase = "https://api.daveget.tech/api";
+
+  var attendanceStatus = "";
   void sendQRToAPI(code) async {
     final dio = Dio();
-    var response =
-        await dio.post("$urlBase/Laborers/RFID", data: {'employeeID': 1234});
+    var response = await dio.post(
+      "$urlBase/Laborers/QRCode?QRCode=$code",
+      data: "",
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      attendanceStatus = response.data;
+      print(response);
+    } else {
+      print(response);
+    }
   }
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -36,13 +46,17 @@ class _HomePageState extends State<HomePage> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
-      // print(result?.code);
-      // sendQRToAPI(result?.code);
-    });
+    controller.scannedDataStream.listen(
+      (scanData) {
+        setState(() {
+          result = scanData;
+        });
+        print(result?.code);
+        if (result?.code?.isNotEmpty == true) {
+          sendQRToAPI(result?.code);
+        }
+      },
+    );
   }
 
   @override
@@ -59,6 +73,24 @@ class _HomePageState extends State<HomePage> {
         title: const Text(
           "Attendance Scanner",
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              controller!.pauseCamera();
+            },
+            icon: const Icon(
+              Icons.stop_outlined,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              controller!.resumeCamera();
+            },
+            icon: const Icon(
+              Icons.refresh,
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -94,16 +126,40 @@ class _HomePageState extends State<HomePage> {
             flex: 1,
             child: Center(
               child: (result != null)
-                  ? Text('Employee ID: ${result!.code}')
-                  : const Text("Employee ID Will Show Down Here"),
+                  ? Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 28.0,
+                            bottom: 10.0,
+                          ),
+                          child: Text(
+                            'Employee QRCode: ${result!.code}',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                            vertical: 5.0,
+                          ),
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: Colors.greenAccent,
+                          ),
+                          child: Text(
+                            attendanceStatus.toString(),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    )
+                  : const Text("Employee QRCode Will Show Down Here"),
             ),
           ),
-          // ElevatedButton(
-          //   onPressed: () {},
-          //   child: const Text(
-          //     "Scan",
-          //   ),
-          // ),
         ],
       ),
     );

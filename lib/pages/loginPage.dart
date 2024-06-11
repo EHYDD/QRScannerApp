@@ -6,11 +6,6 @@ import 'package:flutter_login/flutter_login.dart';
 import 'package:qrscan/pages/homepage.dart';
 import 'package:http/http.dart' as http;
 
-// const users = {
-//   'dribbble@gmail.com': '12345',
-//   'hunter@gmail.com': 'hunter',
-// };
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -20,20 +15,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   var urlBase = "https://api.daveget.tech/api";
-
-  // Duration get loginTime => const Duration(milliseconds: 2250);
-  // Future<String?> _authUser(LoginData data) {
-  //   debugPrint('Name: ${data.name}, Password: ${data.password}');
-  //   return Future.delayed(loginTime).then((_) {
-  //     if (!users.containsKey(data.name)) {
-  //       return 'User not exists';
-  //     }
-  //     if (users[data.name] != data.password) {
-  //       return 'Password does not match';
-  //     }
-  //     return null;
-  //   });
-  // }
 
   Future<String?> login(LoginData data) async {
     final dio = Dio();
@@ -45,32 +26,16 @@ class _LoginPageState extends State<LoginPage> {
     };
     print(abc);
     try {
-      // var response = await dio.post(
-      //   "$urlBase/auth/login",
-      //   data: {
-      //     "email": data.name,
-      //     "password": data.password,
-      //   },
-      // );
-      var url = Uri.parse(urlBase);
-      var response = await http.post(
-        url,
-        body: {
-          "email": data.name.toString().trim(),
-          "password": data.password.toString().trim(),
+      var response = await dio.post(
+        "$urlBase/auth/login",
+        data: {
+          "email": data.name,
+          "password": data.password,
         },
       );
-      print("===========================================");
-      print(response.statusCode);
-      print(response.headers);
-      print(response.body);
-      print("===========================================");
-
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return null;
-      // } else {
-      //   return "Password does not match";
-      // }
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.data);
+      }
     } catch (e) {
       print(e);
       return "Unknown error encountered!";

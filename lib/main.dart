@@ -20,6 +20,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
+        // "/": (context) => const HomePage(),
         "/": (context) => const LoginPage(),
       },
     );
